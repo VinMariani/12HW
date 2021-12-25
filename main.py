@@ -2,8 +2,8 @@ import json
 from flask import Flask, render_template, request
 import requests
 
-#response = requests.get('candidates.json') #импорт данных в приложение
-#candidates = response.json()
+response = requests.get('candidates.json') #импорт данных в приложение
+candidates = response.json()
 
 #settings = json.loads('settings.json') #Импортируйте данные в словарь settings
 
@@ -57,7 +57,7 @@ def skills(skill):
         if skill.lower in candidate['skills']:
             users.append(candidate['name'])
             search_limit += 1
-            if settings.['limit'] == search_limit:
+            if settings['limit'] == search_limit:
                 return render_template('skill.html', count = count, users = users, search_limit = search_limit)
     return render_template('skill.html', count=count, users=users, search_limit=search_limit)
 
