@@ -5,13 +5,12 @@
     <title>Title</title>
 </head>
 <body>
-{% for candidate in candidates %}
-<h1>{{name}}</h1>
-<p>{{position}}</p>
-<img src={{picture}} width=200/>
-<p>{{skills}}</p>
+
+<h1>{{candidate.name}}</h1>
+<p>{{candidate.position}}</p>
+<img src={{candidate.picture}} width=200/>
+<p>{{candidate.skills}}</p>
 <br>
-{% endfor %}
 <br>
 </body>
 </html>

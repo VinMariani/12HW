@@ -2,35 +2,33 @@ import json
 from flask import Flask, render_template, request
 import requests
 
-response = requests.get('candidates.json') #импорт данных в приложение
-candidates = response.json()
-
-#settings = json.loads('settings.json') #Импортируйте данные в словарь settings
-
 app = Flask(__name__)
+
 
 @app.route('/')
 def online_page():
     with open('settings.json') as f:
         settings = json.load(f)
-    return render_template('index.html', **settings )
+    return render_template('index.html', settings=settings)
 
-@app.route('/candidate/<id>')
+
+@app.route('/candidate/<int:id>')
 def candidate_page(id):
-    with open('candidates.json') as f:
+    with open('candidates.json', encoding="utf-8") as f:
         candidates = json.load(f)
     for candidate in candidates:
         if candidate['id'] == id:
-            return render_template('candidate.html', **candidate)
+            return render_template('candidate.html', candidate=candidate)
 
 
 @app.route("/list")
 def list_page():
     with open('candidates.json') as f:
         candidates = json.load(f)
-    return render_template('list.html', **candidates)
+    return render_template('list.html', candidates=candidates)
 
-@app.route("/search?name=<str:name>/")
+
+@app.route("/search/")
 def search_page():
     name = request.args.get('name')
     with open('candidates.json') as f:
@@ -39,9 +37,10 @@ def search_page():
     count = len(users)
     if name:
         for candidate in candidates:
-            if name in candidate['name']:
+            if name == candidate['name']:
                 users.append(candidate['name'])
-    return render_template('users.html', name = name, count = count, users = users)
+    return render_template('users.html', name=name, count=len(users), users=users)
+
 
 @app.route("/skill/<x>")
 def skills(skill):
@@ -58,7 +57,8 @@ def skills(skill):
             users.append(candidate['name'])
             search_limit += 1
             if settings['limit'] == search_limit:
-                return render_template('skill.html', count = count, users = users, search_limit = search_limit)
+                return render_template('skill.html', count=count, users=users, search_limit=search_limit)
     return render_template('skill.html', count=count, users=users, search_limit=search_limit)
+
 
 app.run()
