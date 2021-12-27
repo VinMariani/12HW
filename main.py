@@ -43,7 +43,7 @@ def search_page():
 
 
 @app.route("/skill/")
-def skills(skill):
+def skills():
     skill = request.args.get('skills')
     with open('settings.json') as f:
         settings = json.load(f)
@@ -51,14 +51,13 @@ def skills(skill):
         candidates = json.load(f)
     users = []
     search_limit = 0
-    count = len(users)
     for candidate in candidates:
-        if skills.lower in candidate['skills']:
-            users.append(candidate['name'])
+            if skill.lower() in candidate['skills'].lower():
+                users.append(candidate)
             search_limit += 1
             if settings['limit'] == search_limit:
                 return render_template('skill.html', count=len(users), users=users, search_limit=search_limit)
-    return render_template('skill.html', count=count, users=users, search_limit=search_limit)
+    return render_template('skill.html', count=len(users), users=users, search_limit=search_limit)
 
 
 app.run()
